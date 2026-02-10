@@ -40,12 +40,24 @@ const HOSPI_COLUMN_MAP = {
 };
 
 function findColumnIndex(headers: string[], possibleNames: string[]): number {
+  // First try exact match
   for (const name of possibleNames) {
+    const nameLower = name.toLowerCase().trim();
     const index = headers.findIndex(
-      (h) => h && h.toString().toLowerCase().trim() === name.toLowerCase().trim()
+      (h) => h && h.toString().toLowerCase().trim() === nameLower
     );
     if (index !== -1) return index;
   }
+  
+  // Then try partial match (contains)
+  for (const name of possibleNames) {
+    const nameLower = name.toLowerCase().trim();
+    const index = headers.findIndex(
+      (h) => h && h.toString().toLowerCase().trim().includes(nameLower)
+    );
+    if (index !== -1) return index;
+  }
+  
   return -1;
 }
 
