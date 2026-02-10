@@ -60,7 +60,7 @@ export const DIVISIONS: Record<DivisionCode, Division> = {
 5. DELIVERY TIMELINE: General items: 1-3 working days; Customized orders: 15-20 working days; Import orders: 55-65 days.
 
 6. DELIVERY TERMS: Ex-Factory from Gandhi Kutir, Surat - 395007. Transportation charges additional.`,
-    primaryColor: "#1B5E20",
+    primaryColor: "#10B981",
     logoPath: "/logos/apt-logo.png",
   },
   HOSPI: {
@@ -86,18 +86,18 @@ export const DIVISIONS: Record<DivisionCode, Division> = {
 2. Transportation charges extra.
 3. Quotation valid only 15 days.
 4. Order confirmation by purchase order.`,
-    primaryColor: "#1565C0",
+    primaryColor: "#F43F5E",
     logoPath: "/logos/hospi-logo.png",
   },
 };
 
 // Status configurations
 export const QUOTATION_STATUSES = {
-  DRAFT: { label: "Draft", color: "bg-gray-100 text-gray-700" },
-  SENT: { label: "Sent", color: "bg-blue-100 text-blue-700" },
-  ACCEPTED: { label: "Accepted", color: "bg-green-100 text-green-700" },
-  REJECTED: { label: "Rejected", color: "bg-red-100 text-red-700" },
-  EXPIRED: { label: "Expired", color: "bg-orange-100 text-orange-700" },
+  DRAFT: { label: "Draft", color: "bg-zinc-700 text-zinc-300" },
+  SENT: { label: "Sent", color: "bg-blue-500/20 text-blue-400" },
+  ACCEPTED: { label: "Accepted", color: "bg-emerald-500/20 text-emerald-400" },
+  REJECTED: { label: "Rejected", color: "bg-red-500/20 text-red-400" },
+  EXPIRED: { label: "Expired", color: "bg-amber-500/20 text-amber-400" },
 } as const;
 
 export type QuotationStatus = keyof typeof QUOTATION_STATUSES;
@@ -127,4 +127,37 @@ export const GST_RATES = [
   { value: 12, label: "12%" },
   { value: 18, label: "18%" },
   { value: 28, label: "28%" },
+] as const;
+
+// Import statuses
+export const IMPORT_STATUSES = {
+  parsing: { label: "Parsing", color: "bg-blue-500/20 text-blue-400" },
+  validating: { label: "Validating", color: "bg-amber-500/20 text-amber-400" },
+  reviewing: { label: "Reviewing", color: "bg-purple-500/20 text-purple-400" },
+  committed: { label: "Committed", color: "bg-emerald-500/20 text-emerald-400" },
+  rolled_back: { label: "Rolled Back", color: "bg-red-500/20 text-red-400" },
+} as const;
+
+export type ImportStatus = keyof typeof IMPORT_STATUSES;
+
+// Validation statuses
+export const VALIDATION_STATUSES = {
+  valid: { label: "Valid", color: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" },
+  warning: { label: "Warning", color: "bg-amber-500/10 text-amber-500 border-amber-500/20" },
+  error: { label: "Error", color: "bg-red-500/10 text-red-500 border-red-500/20" },
+} as const;
+
+export type ValidationStatus = keyof typeof VALIDATION_STATUSES;
+
+// Product classes
+export const PRODUCT_CLASSES = [
+  { value: "standard", label: "Standard" },
+  { value: "custom_print", label: "Custom Print" },
+  { value: "made_to_order", label: "Made to Order" },
+] as const;
+
+// Stock types
+export const STOCK_TYPES = [
+  { value: "stocked", label: "Stocked" },
+  { value: "made_to_order", label: "Made to Order" },
 ] as const;
