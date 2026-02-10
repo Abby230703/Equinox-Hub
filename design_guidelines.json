@@ -1,0 +1,153 @@
+{
+  "typography": {
+    "font_family": {
+      "heading": "Manrope, sans-serif",
+      "body": "IBM Plex Sans, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "weights": {
+      "light": 300,
+      "regular": 400,
+      "medium": 500,
+      "semibold": 600,
+      "bold": 700,
+      "black": 900
+    },
+    "sizes": {
+      "xs": "0.75rem",
+      "sm": "0.875rem",
+      "base": "1rem",
+      "lg": "1.125rem",
+      "xl": "1.25rem",
+      "2xl": "1.5rem",
+      "3xl": "1.875rem",
+      "4xl": "2.25rem",
+      "5xl": "3rem"
+    }
+  },
+  "colors": {
+    "theme": "dark",
+    "background": "#09090B",
+    "foreground": "#FAFAFA",
+    "card": "#18181B",
+    "card_foreground": "#FAFAFA",
+    "popover": "#18181B",
+    "popover_foreground": "#FAFAFA",
+    "primary": "#FAFAFA",
+    "primary_foreground": "#18181B",
+    "secondary": "#27272A",
+    "secondary_foreground": "#FAFAFA",
+    "muted": "#27272A",
+    "muted_foreground": "#A1A1AA",
+    "accent": "#27272A",
+    "accent_foreground": "#FAFAFA",
+    "destructive": "#EF4444",
+    "destructive_foreground": "#FAFAFA",
+    "border": "#27272A",
+    "input": "#27272A",
+    "ring": "#D4D4D8",
+    "divisions": {
+      "apt": {
+        "primary": "#10B981",
+        "secondary": "#059669",
+        "bg_gradient": "linear-gradient(180deg, rgba(16, 185, 129, 0.1) 0%, rgba(9, 9, 11, 0) 100%)",
+        "border": "#064E3B"
+      },
+      "hospi": {
+        "primary": "#F43F5E",
+        "secondary": "#E11D48",
+        "bg_gradient": "linear-gradient(180deg, rgba(244, 63, 94, 0.1) 0%, rgba(9, 9, 11, 0) 100%)",
+        "border": "#881337"
+      }
+    },
+    "status": {
+      "success": "#10B981",
+      "warning": "#F59E0B",
+      "error": "#EF4444",
+      "info": "#3B82F6"
+    }
+  },
+  "layout": {
+    "container": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+    "spacing": {
+      "section": "py-12",
+      "component": "p-6"
+    },
+    "radius": {
+      "sm": "0.25rem",
+      "md": "0.5rem",
+      "lg": "0.75rem",
+      "xl": "1rem"
+    }
+  },
+  "components": {
+    "wizard": {
+      "container": "bg-zinc-900/50 border border-zinc-800 rounded-xl p-8 backdrop-blur-sm",
+      "step_active": "text-white border-primary bg-primary/10 ring-2 ring-primary/20",
+      "step_inactive": "text-zinc-500 border-zinc-700 bg-zinc-900",
+      "connector_active": "bg-primary",
+      "connector_inactive": "bg-zinc-800"
+    },
+    "file_upload": {
+      "zone": "border-2 border-dashed border-zinc-700 rounded-xl p-12 text-center hover:border-primary hover:bg-zinc-900/50 transition-all cursor-pointer group relative overflow-hidden",
+      "icon": "w-12 h-12 text-zinc-500 group-hover:text-primary transition-colors mb-4",
+      "text": "text-zinc-400 group-hover:text-zinc-200"
+    },
+    "data_table": {
+      "wrapper": "rounded-md border border-zinc-800 overflow-hidden",
+      "header": "bg-zinc-900/50 text-zinc-400 text-xs uppercase tracking-wider font-medium border-b border-zinc-800",
+      "row": "border-b border-zinc-800 hover:bg-zinc-900/50 transition-colors",
+      "cell": "p-4 text-sm text-zinc-300",
+      "validation_badge": {
+        "valid": "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-2 py-0.5 rounded text-xs font-medium",
+        "warning": "bg-amber-500/10 text-amber-500 border border-amber-500/20 px-2 py-0.5 rounded text-xs font-medium",
+        "error": "bg-red-500/10 text-red-500 border border-red-500/20 px-2 py-0.5 rounded text-xs font-medium"
+      }
+    },
+    "buttons": {
+      "primary": "bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md font-medium transition-colors",
+      "secondary": "bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2 rounded-md font-medium transition-colors",
+      "ghost": "hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 rounded-md font-medium transition-colors",
+      "destructive": "bg-destructive text-destructive-foreground hover:bg-destructive/90 h-10 px-4 py-2 rounded-md font-medium transition-colors"
+    }
+  },
+  "assets": {
+    "images": {
+      "apt_hero": "https://images.unsplash.com/photo-1740914994657-f1cdffdc418e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MDZ8MHwxfHNlYXJjaHwxfHxpbmR1c3RyaWFsJTIwcGFja2FnaW5nJTIwd2FyZWhvdXNlfGVufDB8fHx8MTc3MDcyMzA5MXww&ixlib=rb-4.1.0&q=85",
+      "hospi_hero": "https://images.unsplash.com/photo-1763025747123-bb3a2e3a5ac3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzV8MHwxfHNlYXJjaHwyfHxtZWRpY2FsJTIwaG9zcGl0YWwlMjBzdXBwbGllcyUyMGludmVudG9yeXxlbnwwfHx8fDE3NzA3MjMwOTR8MA&ixlib=rb-4.1.0&q=85"
+    },
+    "icons": "lucide-react"
+  },
+  "instructions_to_main_agent": [
+    "1. UPDATE TAILWIND CONFIG: Modify `tailwind.config.ts` to include the new color palette (Zinc-based dark mode) and the specific `apt` (Green) and `hospi` (Red) colors. Add `Manrope` and `IBM Plex Sans` to font families.",
+    "2. UPDATE GLOBALS.CSS: Replace the light mode CSS with the dark mode variables defined in `colors` section. Ensure `@layer base` sets the default background to `#09090B` and text to `#FAFAFA`.",
+    "3. CREATE LAYOUT WRAPPER: Ensure the main layout handles the division switching logic (applying a class or context) to toggle between APT and Hospi themes (mainly affecting primary/accent colors).",
+    "4. BUILD IMPORT WIZARD: Create a 4-step wizard component. Use the `wizard` styles defined. State management should handle the file data through all 4 stages.",
+    "5. IMPLEMENT DATA TABLE: Build a reusable data table component that supports validation status. Use `tanstack/react-table` if available or build a custom one using the `data_table` styles. It must handle 'valid', 'warning', and 'error' states for rows/cells.",
+    "6. DRAG & DROP: Implement `react-dropzone` for the file upload stage using the `file_upload` styles.",
+    "7. CONFLICT RESOLUTION: Create a specific UI for Stage 2 (Validation) where users can see side-by-side comparisons for duplicates or dropdowns for category assignment.",
+    "8. REVIEW SCREEN: Stage 4 should be a summary screen with 'Commit' and 'Cancel' actions.",
+    "9. ACCESSIBILITY: Ensure all inputs have labels, colors meet contrast ratios (check against Zinc-900), and interactive elements have focus states."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "You tend to converge toward generic, 'on distribution' outputs. In frontend design, this creates what users call the 'AI slop' aesthetic. Avoid this: make creative, distinctive frontends that surprise and delight.",
+    "Dark colors look good when used independently without gradients. DO NOT use dark colors as gradients",
+    "Don't make generic centered layouts, simplistic gradients, and uniform styling.",
+    "Create depth through layered design elements with z-index hierarchy",
+    "Use glass-morphism effects with backdrop filters (12-24px blur)",
+    "You MUST NOT apply universal transition. Eg: `transition: all`. This results in breaking transforms. Always add transitions for specific interactive elements like button, input excluding transforms",
+    "You MUST NOT center align the app container, ie do not add `.App { text-align: center; }` in the css file. This disrupts the human natural reading flow of text",
+    "Always use modern button styles like pill-shaped, or sharp button with interaction animations & color relevant to the app style",
+    "NEVER: use AI assistant Emoji characters like 🤖🧠💭💡🔮🎯📚 etc for icons.",
+    "Every interaction needs micro-animations - hover states, transitions, parallax effects, and entrance animations. Static = dead.",
+    "Use 2-3x more spacing than feels comfortable. Cramped designs look cheap.",
+    "Subtle grain textures, noise overlays, custom cursors, selection states, and loading animations: separates good from extraordinary.",
+    "Main agent relies on these image URLs. Missing categories (especially sponsor logos) = main agent will use placeholder text which is FORBIDDEN",
+    "Prioritize using pre-existing components from src/components/ui when applicable",
+    "Create new components that match the style and conventions of existing components when needed",
+    "Examine existing components to understand the project's component patterns before creating new ones",
+    "Components MUST use named exports (export const ComponentName = ...)",
+    "Pages MUST use default exports (export default function PageName() {...})",
+    "Use `sonner` for toasts. Sonner component are located in `/app/src/components/ui/sonner.tsx`"
+  ]
+}
