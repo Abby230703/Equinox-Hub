@@ -122,17 +122,24 @@ export function parseExcelFile(
   
   // Find header row (first row with meaningful data)
   let headerRowIndex = 0;
-  for (let i = 0; i < Math.min(rawData.length, 5); i++) {
+  for (let i = 0; i < Math.min(rawData.length, 10); i++) {
     const row = rawData[i];
-    if (row && row.filter((cell) => cell !== null && cell !== "").length >= 3) {
-      headerRowIndex = i;
-      break;
+    if (row && row.filter((cell) => cell !== null && cell !== "").length >= 5) {
+      // Check if this row contains typical header keywords
+      const rowStr = row.map(c => String(c || "").toLowerCase()).join(" ");
+      if (rowStr.includes("product") || rowStr.includes("bar code") || rowStr.includes("barcode") || rowStr.includes("price")) {
+        headerRowIndex = i;
+        break;
+      }
     }
   }
   
   const headers = (rawData[headerRowIndex] as string[]).map((h) =>
     h ? String(h).trim() : ""
   );
+  
+  // Log headers for debugging
+  console.log("Detected headers:", headers);
   
   const columnMap = divisionCode === "APT" ? APT_COLUMN_MAP : HOSPI_COLUMN_MAP;
   
@@ -152,9 +159,35 @@ export function parseExcelFile(
     unit: findColumnIndex(headers, columnMap.unit),
   };
   
+  // Log detected indices for debugging
+  console.log("Column indices:", indices);
+  
   // If name column not found, try using first or second column
   if (indices.name === -1) {
     indices.name = indices.barcode === 0 ? 1 : 0;
+  }
+  
+  // If price column not found, try to detect it by looking at data
+  if (indices.sellingPrice === -1) {
+    // Look at first data row to find a column with numeric price-like values
+    const firstDataRow = rawData[headerRowIndex + 1];
+    if (firstDataRow) {
+      for (let col = 0; col < headers.length; col++) {
+        const val = firstDataRow[col];
+        if (val !== null && val !== undefined) {
+          const numVal = parseFloat(String(val).replace(/[₹,\s]/g, ""));
+          // If it looks like a price (between 0.1 and 100000) and the header contains "price"
+          if (!isNaN(numVal) && numVal > 0 && numVal < 100000) {
+            const headerLower = headers[col].toLowerCase();
+            if (headerLower.includes("price") || headerLower.includes("rate")) {
+              indices.sellingPrice = col;
+              console.log("Auto-detected price column:", col, headers[col]);
+              break;
+            }
+          }
+        }
+      }
+    }
   }
   
   let currentCategory = "Uncategorized";
@@ -175,44 +208,52 @@ export function parseExcelFile(
     // Check if this is a category header row
     const nameValue = cleanValue(row[indices.name]);
     const barcodeValue = cleanValue(row[indices.barcode]);
-    const priceValue = cleanPrice(row[indices.sellingPrice]);
+    const priceValue = indices.sellingPrice >= 0 ? cleanPrice(row[indices.sellingPrice]) : null;
     
-    // Detect category rows
-    if (nameValue && !barcodeValue && priceValue === null) {
-      // Check if most other fields are also empty
-      const otherFieldsEmpty = 
-        cleanNumber(row[indices.moq]) === null &&
-        cleanNumber(row[indices.sleeveQty]) === null &&
-        cleanNumber(row[indices.boxQty]) === null;
-      
-      if (otherFieldsEmpty) {
-        currentCategory = nameValue;
-        if (!result.categories.includes(currentCategory)) {
-          result.categories.push(currentCategory);
-        }
-        
-        // Add as a category marker row
-        result.rows.push({
-          rowNumber: i + 1,
-          raw: rowObj,
-          barcode: null,
-          name: nameValue,
-          categoryName: currentCategory,
-          specifications: null,
-          customizable: false,
-          printType: null,
-          moq: null,
-          sleeveQty: null,
-          boxQty: null,
-          stockType: "stocked",
-          sellingPrice: null,
-          listPrice: null,
-          warehouseZone: null,
-          unit: "PCS",
-          isCategory: true,
-        });
-        continue;
+    // Log first few rows for debugging
+    if (i <= headerRowIndex + 3) {
+      console.log(`Row ${i + 1}:`, { 
+        barcode: barcodeValue, 
+        name: nameValue, 
+        priceRaw: indices.sellingPrice >= 0 ? row[indices.sellingPrice] : "N/A",
+        priceParsed: priceValue 
+      });
+    }
+    
+    // Detect category rows - a row with only name/barcode but no meaningful data
+    const hasNumericData = row.some((cell, idx) => {
+      if (idx === indices.name || idx === indices.barcode) return false;
+      const num = parseFloat(String(cell || "").replace(/[₹,\s]/g, ""));
+      return !isNaN(num) && num > 0;
+    });
+    
+    if (nameValue && !hasNumericData && !barcodeValue) {
+      currentCategory = nameValue;
+      if (!result.categories.includes(currentCategory)) {
+        result.categories.push(currentCategory);
       }
+      
+      // Add as a category marker row
+      result.rows.push({
+        rowNumber: i + 1,
+        raw: rowObj,
+        barcode: null,
+        name: nameValue,
+        categoryName: currentCategory,
+        specifications: null,
+        customizable: false,
+        printType: null,
+        moq: null,
+        sleeveQty: null,
+        boxQty: null,
+        stockType: "stocked",
+        sellingPrice: null,
+        listPrice: null,
+        warehouseZone: null,
+        unit: "PCS",
+        isCategory: true,
+      });
+      continue;
     }
     
     // Regular product row
@@ -222,17 +263,17 @@ export function parseExcelFile(
       barcode: barcodeValue || null,
       name: nameValue || null,
       categoryName: currentCategory,
-      specifications: cleanValue(row[indices.specifications]),
-      customizable: parseBoolean(row[indices.customizable]),
+      specifications: indices.specifications >= 0 ? cleanValue(row[indices.specifications]) : null,
+      customizable: indices.customizable >= 0 ? parseBoolean(row[indices.customizable]) : false,
       printType: null, // Will be detected based on patterns
-      moq: cleanNumber(row[indices.moq]),
-      sleeveQty: cleanNumber(row[indices.sleeveQty]),
-      boxQty: cleanNumber(row[indices.boxQty]),
-      stockType: parseBoolean(row[indices.stockType]) ? "stocked" : "made_to_order",
-      sellingPrice: cleanPrice(row[indices.sellingPrice]),
-      listPrice: cleanPrice(row[indices.listPrice]),
-      warehouseZone: cleanValue(row[indices.warehouseZone]),
-      unit: cleanValue(row[indices.unit]) || "PCS",
+      moq: indices.moq >= 0 ? cleanNumber(row[indices.moq]) : null,
+      sleeveQty: indices.sleeveQty >= 0 ? cleanNumber(row[indices.sleeveQty]) : null,
+      boxQty: indices.boxQty >= 0 ? cleanNumber(row[indices.boxQty]) : null,
+      stockType: indices.stockType >= 0 && parseBoolean(row[indices.stockType]) ? "stocked" : "made_to_order",
+      sellingPrice: priceValue,
+      listPrice: indices.listPrice >= 0 ? cleanPrice(row[indices.listPrice]) : null,
+      warehouseZone: indices.warehouseZone >= 0 ? cleanValue(row[indices.warehouseZone]) : null,
+      unit: indices.unit >= 0 ? (cleanValue(row[indices.unit]) || "PCS") : "PCS",
       isCategory: false,
     };
     
