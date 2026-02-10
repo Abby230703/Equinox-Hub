@@ -3,107 +3,157 @@
 import React from "react";
 import { useDivision } from "@/hooks/use-division";
 import { Header, PageHeader } from "@/components/layout/header";
-import { Card, CardHeader, CardTitle, CardContent, Input } from "@/components/ui";
+import { Card, CardContent, CardHeader, CardTitle, Button, Badge } from "@/components/ui";
 import { cn } from "@/lib/utils";
-import { Building2, CreditCard, FileText, Bell } from "lucide-react";
+import {
+  Building2,
+  Phone,
+  MapPin,
+  CreditCard,
+  FileText,
+  Save,
+} from "lucide-react";
 
 export default function SettingsPage() {
-  const { currentDivision, divisionCode } = useDivision();
+  const { divisionCode, currentDivision } = useDivision();
+
+  const divisionColors = {
+    APT: {
+      accent: "text-apt-500",
+      bg: "bg-apt-500/10",
+      border: "border-apt-500/30",
+    },
+    HOSPI: {
+      accent: "text-hospi-500",
+      bg: "bg-hospi-500/10",
+      border: "border-hospi-500/30",
+    },
+  };
+  const colors = divisionColors[divisionCode];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       <Header title="Settings" />
 
-      <div className="p-6">
-        <PageHeader title="Settings" description="Manage your division settings and preferences" />
+      <div className="p-6 max-w-4xl">
+        <PageHeader
+          title="Settings"
+          description="Manage division settings and preferences"
+        />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <div className={cn("p-2 rounded-lg", divisionCode === "APT" ? "bg-green-100" : "bg-blue-100")}>
-                    <Building2 className={cn("w-5 h-5", divisionCode === "APT" ? "text-green-600" : "text-blue-600")} />
-                  </div>
-                  <CardTitle>Company Information</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Input label="Company Name" value={currentDivision.companyName} readOnly />
-                <Input label="Tagline" value={currentDivision.tagline} readOnly />
-                <Input label="Address" value={`${currentDivision.address}, ${currentDivision.city} - ${currentDivision.pincode}`} readOnly />
-                <div className="grid grid-cols-2 gap-4">
-                  <Input label="Phone" value={currentDivision.phone} readOnly />
-                  <Input label="GST Number" value={currentDivision.gstNumber} readOnly />
-                </div>
-              </CardContent>
-            </Card>
+        {/* Company Info */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Building2 className="w-5 h-5" />
+              Company Information
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm text-muted-foreground">Company Name</label>
+                <p className="font-medium text-foreground">{currentDivision.companyName}</p>
+              </div>
+              <div>
+                <label className="text-sm text-muted-foreground">Division Code</label>
+                <Badge className={cn(colors.bg, colors.accent, "ml-2")}>
+                  {divisionCode}
+                </Badge>
+              </div>
+              <div>
+                <label className="text-sm text-muted-foreground">GST Number</label>
+                <p className="font-medium text-foreground font-mono">{currentDivision.gstNumber}</p>
+              </div>
+              <div>
+                <label className="text-sm text-muted-foreground">Tagline</label>
+                <p className="font-medium text-foreground">{currentDivision.tagline}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-purple-100">
-                    <CreditCard className="w-5 h-5 text-purple-600" />
-                  </div>
-                  <CardTitle>Banking Details</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Input label="Bank Name" value={currentDivision.bankName} readOnly />
-                <Input label="Branch" value={currentDivision.bankBranch} readOnly />
-                <div className="grid grid-cols-2 gap-4">
-                  <Input label="Account Number" value={currentDivision.bankAccountNumber} readOnly />
-                  <Input label="IFSC Code" value={currentDivision.bankIfsc} readOnly />
-                </div>
-                {currentDivision.upiNumber && <Input label="UPI Number" value={currentDivision.upiNumber} readOnly />}
-              </CardContent>
-            </Card>
-          </div>
+        {/* Contact Info */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Phone className="w-5 h-5" />
+              Contact Information
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm text-muted-foreground">Phone</label>
+                <p className="font-medium text-foreground">{currentDivision.phone}</p>
+              </div>
+              <div>
+                <label className="text-sm text-muted-foreground">City</label>
+                <p className="font-medium text-foreground">{currentDivision.city}, {currentDivision.state}</p>
+              </div>
+            </div>
+            <div>
+              <label className="text-sm text-muted-foreground">Address</label>
+              <p className="font-medium text-foreground">{currentDivision.address}</p>
+            </div>
+          </CardContent>
+        </Card>
 
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-amber-100">
-                    <FileText className="w-5 h-5 text-amber-600" />
-                  </div>
-                  <CardTitle>Quotation Settings</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <p className="text-sm font-medium text-gray-700">Default Validity</p>
-                  <p className="text-2xl font-bold text-gray-900">{currentDivision.quotationValidityDays} days</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-700">Number Prefix</p>
-                  <p className="text-lg font-mono text-gray-900">{currentDivision.quotationPrefix}</p>
-                </div>
-              </CardContent>
-            </Card>
+        {/* Bank Details */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <CreditCard className="w-5 h-5" />
+              Bank Details
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm text-muted-foreground">Bank Name</label>
+                <p className="font-medium text-foreground">{currentDivision.bankName}</p>
+              </div>
+              <div>
+                <label className="text-sm text-muted-foreground">Branch</label>
+                <p className="font-medium text-foreground">{currentDivision.bankBranch}</p>
+              </div>
+              <div>
+                <label className="text-sm text-muted-foreground">Account Number</label>
+                <p className="font-medium text-foreground font-mono">{currentDivision.bankAccountNumber}</p>
+              </div>
+              <div>
+                <label className="text-sm text-muted-foreground">IFSC Code</label>
+                <p className="font-medium text-foreground font-mono">{currentDivision.bankIfsc}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-blue-100">
-                    <Bell className="w-5 h-5 text-blue-600" />
-                  </div>
-                  <CardTitle>Notifications</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-500">Coming soon in future update.</p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
-        <Card className="mt-6">
-          <CardHeader><CardTitle>Default Terms & Conditions</CardTitle></CardHeader>
-          <CardContent>
-            <pre className="text-sm text-gray-700 whitespace-pre-wrap bg-gray-50 p-4 rounded-lg border border-gray-200 max-h-64 overflow-y-auto scrollbar-thin">
-              {currentDivision.termsAndConditions}
-            </pre>
+        {/* Quotation Settings */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <FileText className="w-5 h-5" />
+              Quotation Settings
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm text-muted-foreground">Quotation Prefix</label>
+                <p className="font-medium text-foreground font-mono">{currentDivision.quotationPrefix}</p>
+              </div>
+              <div>
+                <label className="text-sm text-muted-foreground">Validity (Days)</label>
+                <p className="font-medium text-foreground">{currentDivision.quotationValidityDays} days</p>
+              </div>
+            </div>
+            <div>
+              <label className="text-sm text-muted-foreground">Terms & Conditions</label>
+              <pre className="mt-2 p-4 bg-zinc-900/50 rounded-lg text-sm text-muted-foreground whitespace-pre-wrap font-body">
+                {currentDivision.termsAndConditions}
+              </pre>
+            </div>
           </CardContent>
         </Card>
       </div>
