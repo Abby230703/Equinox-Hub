@@ -18,9 +18,24 @@ export async function createClient() {
               cookieStore.set(name, value, options)
             );
           } catch {
-            // Server Component - can be ignored
+            // Handle cookie setting errors
           }
         },
+      },
+    }
+  );
+}
+
+// Service role client for backend operations
+export function createServiceClient() {
+  const { createClient } = require("@supabase/supabase-js");
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
       },
     }
   );

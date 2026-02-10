@@ -19,6 +19,16 @@ export interface Division {
   created_at: string;
 }
 
+export interface Category {
+  id: string;
+  division_id: string;
+  name: string;
+  sort_order: number;
+  hsn_code?: string;
+  gst_percent?: number;
+  created_at: string;
+}
+
 export interface Customer {
   id: string;
   division_id: string | null;
@@ -44,15 +54,84 @@ export interface Product {
   barcode: string | null;
   name: string;
   description: string | null;
+  specifications: string | null;
+  product_class: "standard" | "custom_print" | "made_to_order";
+  is_customizable: boolean;
+  print_type: string | null;
+  parent_product_id: string | null;
   unit: string;
+  moq: number | null;
+  sleeve_quantity: number | null;
   box_quantity: number | null;
-  list_price: number;
-  base_price: number;
-  gst_percent: number;
+  selling_price: number;
+  list_price: number | null;
+  cost_price: number | null;
   hsn_code: string | null;
+  gst_percent: number | null;
+  stock_type: "stocked" | "made_to_order";
+  warehouse_zone: string | null;
+  marketplace_listed: boolean;
   is_active: boolean;
+  is_auto_sku: boolean;
+  import_notes: string | null;
+  source_row_number: number | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface ImportBatch {
+  id: string;
+  division_id: string;
+  file_name: string;
+  uploaded_at: string;
+  total_rows: number;
+  valid_count: number;
+  warning_count: number;
+  error_count: number;
+  status: "parsing" | "validating" | "reviewing" | "committed" | "rolled_back";
+  committed_at: string | null;
+  committed_by: string | null;
+}
+
+export interface ImportStagingRow {
+  id: string;
+  import_batch_id: string;
+  division_id: string;
+  row_number: number;
+  raw_data: Record<string, unknown>;
+  parsed_sku: string | null;
+  parsed_barcode: string | null;
+  parsed_name: string | null;
+  parsed_category_name: string | null;
+  parsed_specifications: string | null;
+  parsed_customizable: boolean | null;
+  parsed_print_type: string | null;
+  parsed_moq: number | null;
+  parsed_sleeve_qty: number | null;
+  parsed_box_qty: number | null;
+  parsed_stock_type: string | null;
+  parsed_selling_price: number | null;
+  parsed_warehouse_zone: string | null;
+  parsed_unit: string | null;
+  detected_product_class: "standard" | "custom_print" | "made_to_order" | null;
+  detected_parent_barcode: string | null;
+  validation_status: "valid" | "warning" | "error";
+  validation_messages: ValidationMessage[];
+  conflict_type: "duplicate_barcode" | "existing_product" | "custom_print_variant" | null;
+  resolution: "auto_sku" | "skip" | "overwrite" | "create_variant" | null;
+  assigned_category_id: string | null;
+  assigned_hsn: string | null;
+  assigned_gst_percent: number | null;
+  is_committed: boolean;
+  committed_product_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ValidationMessage {
+  type: "error" | "warning" | "info";
+  message: string;
+  field?: string;
 }
 
 export interface Quotation {
@@ -98,4 +177,55 @@ export interface DashboardStats {
   expiringIn2Days: number;
   totalValueThisMonth: number;
   conversionRate: number;
+}
+
+// Import wizard state
+export interface ImportWizardState {
+  currentStage: 1 | 2 | 3 | 4;
+  batchId: string | null;
+  fileName: string | null;
+  divisionId: string;
+  divisionCode: "APT" | "HOSPI";
+  stagingRows: ImportStagingRow[];
+  categories: DetectedCategory[];
+  summary: ImportSummary | null;
+}
+
+export interface DetectedCategory {
+  name: string;
+  count: number;
+  hsn_code: string | null;
+  gst_percent: number | null;
+  assigned_category_id: string | null;
+}
+
+export interface ImportSummary {
+  total_rows: number;
+  valid_count: number;
+  warning_count: number;
+  error_count: number;
+  custom_print_variants: number;
+  auto_generated_skus: number;
+  categories_detected: number;
+}
+
+// Parsed Excel row structure
+export interface ParsedExcelRow {
+  rowNumber: number;
+  raw: Record<string, unknown>;
+  barcode: string | null;
+  name: string | null;
+  categoryName: string | null;
+  specifications: string | null;
+  customizable: boolean;
+  printType: string | null;
+  moq: number | null;
+  sleeveQty: number | null;
+  boxQty: number | null;
+  stockType: "stocked" | "made_to_order";
+  sellingPrice: number | null;
+  listPrice: number | null;
+  warehouseZone: string | null;
+  unit: string;
+  isCategory: boolean;
 }
