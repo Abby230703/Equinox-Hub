@@ -233,14 +233,26 @@ export function parseExcelFile(
     }
     
     // Detect category rows - a row with only name/barcode but no meaningful data
+    // Category rows typically have text in the first column but no numeric data
     const hasNumericData = row.some((cell, idx) => {
       if (idx === indices.name || idx === indices.barcode) return false;
-      const num = parseFloat(String(cell || "").replace(/[₹,\s]/g, ""));
+      if (cell === null || cell === undefined || cell === "") return false;
+      const num = parseFloat(String(cell).replace(/[₹,\s]/g, ""));
       return !isNaN(num) && num > 0;
     });
     
-    if (nameValue && !hasNumericData && !barcodeValue) {
-      currentCategory = nameValue;
+    // Check if this looks like a category row:
+    // - Has text in first column (barcode position) OR name position
+    // - No meaningful numeric data in other columns
+    // - No price value
+    const firstColValue = cleanValue(row[0]); // First column
+    const isLikelyCategoryRow = firstColValue && 
+                                 !hasNumericData && 
+                                 (priceValue === null || priceValue === 0) &&
+                                 !nameValue; // Name column is empty
+    
+    if (isLikelyCategoryRow) {
+      currentCategory = firstColValue;
       if (!result.categories.includes(currentCategory)) {
         result.categories.push(currentCategory);
       }
@@ -250,7 +262,7 @@ export function parseExcelFile(
         rowNumber: i + 1,
         raw: rowObj,
         barcode: null,
-        name: nameValue,
+        name: firstColValue,
         categoryName: currentCategory,
         specifications: null,
         customizable: false,
