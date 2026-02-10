@@ -14,33 +14,34 @@ interface HeaderProps {
     label: string;
     href?: string;
     onClick?: () => void;
+    icon?: React.ReactNode;
   };
 }
 
 export function Header({ title, action }: HeaderProps) {
   return (
-    <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6">
+    <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6">
       <div>
         {title && (
-          <h1 className="text-xl font-semibold text-gray-900">{title}</h1>
+          <h1 className="text-xl font-semibold text-foreground font-heading">{title}</h1>
         )}
       </div>
 
       <div className="flex items-center gap-3">
         {/* Search */}
-        <div className="hidden md:flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 w-64">
-          <Search className="w-4 h-4 text-gray-400" />
+        <div className="hidden md:flex items-center gap-2 px-3 py-2 bg-secondary rounded-lg border border-border w-64">
+          <Search className="w-4 h-4 text-muted-foreground" />
           <input
             type="text"
             placeholder="Search..."
-            className="bg-transparent border-none outline-none text-sm text-gray-700 placeholder:text-gray-400 w-full"
+            className="bg-transparent border-none outline-none text-sm text-foreground placeholder:text-muted-foreground w-full"
           />
         </div>
 
         {/* Notifications */}
-        <button className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors">
-          <Bell className="w-5 h-5 text-gray-600" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
+        <button className="relative p-2 rounded-lg hover:bg-secondary transition-colors">
+          <Bell className="w-5 h-5 text-muted-foreground" />
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-destructive rounded-full" />
         </button>
 
         {/* Quick Action */}
@@ -49,13 +50,13 @@ export function Header({ title, action }: HeaderProps) {
             {action.href ? (
               <Link href={action.href}>
                 <Button size="sm" className="gap-2">
-                  <Plus className="w-4 h-4" />
+                  {action.icon || <Plus className="w-4 h-4" />}
                   <span className="hidden sm:inline">{action.label}</span>
                 </Button>
               </Link>
             ) : (
               <Button size="sm" onClick={action.onClick} className="gap-2">
-                <Plus className="w-4 h-4" />
+                {action.icon || <Plus className="w-4 h-4" />}
                 <span className="hidden sm:inline">{action.label}</span>
               </Button>
             )}
@@ -63,9 +64,9 @@ export function Header({ title, action }: HeaderProps) {
         )}
 
         {/* User Menu */}
-        <button className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-gray-100 transition-colors">
-          <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-            <User className="w-4 h-4 text-gray-600" />
+        <button className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-secondary transition-colors">
+          <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center border border-border">
+            <User className="w-4 h-4 text-muted-foreground" />
           </div>
         </button>
       </div>
@@ -81,39 +82,65 @@ interface PageHeaderProps {
     label: string;
     href?: string;
     onClick?: () => void;
+    icon?: React.ReactNode;
+    variant?: "primary" | "secondary" | "outline";
+  };
+  secondaryAction?: {
+    label: string;
+    href?: string;
+    onClick?: () => void;
+    icon?: React.ReactNode;
   };
 }
 
-export function PageHeader({ title, description, action }: PageHeaderProps) {
-  const { divisionCode } = useDivision();
-
+export function PageHeader({ title, description, action, secondaryAction }: PageHeaderProps) {
   return (
     <div className="mb-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">{title}</h1>
+          <h1 className="text-2xl font-semibold text-foreground font-heading">{title}</h1>
           {description && (
-            <p className="text-sm text-gray-500 mt-1">{description}</p>
+            <p className="text-sm text-muted-foreground mt-1">{description}</p>
           )}
         </div>
 
-        {action && (
-          <>
-            {action.href ? (
-              <Link href={action.href}>
-                <Button className="gap-2">
-                  <Plus className="w-4 h-4" />
+        <div className="flex items-center gap-3">
+          {secondaryAction && (
+            <>
+              {secondaryAction.href ? (
+                <Link href={secondaryAction.href}>
+                  <Button variant="outline" className="gap-2">
+                    {secondaryAction.icon}
+                    {secondaryAction.label}
+                  </Button>
+                </Link>
+              ) : (
+                <Button variant="outline" onClick={secondaryAction.onClick} className="gap-2">
+                  {secondaryAction.icon}
+                  {secondaryAction.label}
+                </Button>
+              )}
+            </>
+          )}
+          
+          {action && (
+            <>
+              {action.href ? (
+                <Link href={action.href}>
+                  <Button variant={action.variant || "primary"} className="gap-2">
+                    {action.icon || <Plus className="w-4 h-4" />}
+                    {action.label}
+                  </Button>
+                </Link>
+              ) : (
+                <Button variant={action.variant || "primary"} onClick={action.onClick} className="gap-2">
+                  {action.icon || <Plus className="w-4 h-4" />}
                   {action.label}
                 </Button>
-              </Link>
-            ) : (
-              <Button onClick={action.onClick} className="gap-2">
-                <Plus className="w-4 h-4" />
-                {action.label}
-              </Button>
-            )}
-          </>
-        )}
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
