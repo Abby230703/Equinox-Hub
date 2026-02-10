@@ -2,19 +2,20 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: "default" | "success" | "warning" | "danger" | "info" | "secondary";
+  variant?: "default" | "success" | "warning" | "danger" | "info" | "secondary" | "outline";
   size?: "sm" | "md";
 }
 
 const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
   ({ className, variant = "default", size = "md", children, ...props }, ref) => {
     const variants = {
-      default: "bg-gray-100 text-gray-700",
-      success: "bg-green-100 text-green-700",
-      warning: "bg-amber-100 text-amber-700",
-      danger: "bg-red-100 text-red-700",
-      info: "bg-blue-100 text-blue-700",
-      secondary: "bg-purple-100 text-purple-700",
+      default: "bg-zinc-700 text-zinc-300",
+      success: "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20",
+      warning: "bg-amber-500/10 text-amber-500 border border-amber-500/20",
+      danger: "bg-red-500/10 text-red-500 border border-red-500/20",
+      info: "bg-blue-500/10 text-blue-400 border border-blue-500/20",
+      secondary: "bg-zinc-800 text-zinc-400 border border-zinc-700",
+      outline: "border border-border text-muted-foreground",
     };
 
     const sizes = {
@@ -41,6 +42,23 @@ const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
 
 Badge.displayName = "Badge";
 
+// Validation badge for import system
+interface ValidationBadgeProps {
+  status: "valid" | "warning" | "error";
+}
+
+const ValidationBadge: React.FC<ValidationBadgeProps> = ({ status }) => {
+  const config: Record<string, { label: string; variant: BadgeProps["variant"] }> = {
+    valid: { label: "Valid", variant: "success" },
+    warning: { label: "Warning", variant: "warning" },
+    error: { label: "Error", variant: "danger" },
+  };
+
+  const { label, variant } = config[status] || config.valid;
+
+  return <Badge variant={variant}>{label}</Badge>;
+};
+
 // Status-specific badge for quotations
 interface StatusBadgeProps {
   status: "DRAFT" | "SENT" | "ACCEPTED" | "REJECTED" | "EXPIRED";
@@ -63,4 +81,4 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   return <Badge variant={variant}>{label}</Badge>;
 };
 
-export { Badge, StatusBadge };
+export { Badge, StatusBadge, ValidationBadge };
