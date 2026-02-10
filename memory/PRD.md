@@ -48,6 +48,8 @@ Internal management tool for a trading company with two divisions:
 - [x] 4-stage import wizard UI
 - [x] File upload with drag-and-drop (react-dropzone)
 - [x] Excel parsing (xlsx library)
+- [x] **Price column detection** - Fixed to read "Prices" column (Column I)
+- [x] **Category detection** - Detects category rows from first column with no numeric data
 - [x] Validation review component
 - [x] Category & Tax assignment UI
 - [x] Final review and commit flow
