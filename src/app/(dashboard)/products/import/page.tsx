@@ -50,6 +50,19 @@ export default function ImportWizardPage() {
       try {
         const buffer = await file.arrayBuffer();
         const result = parseExcelFile(buffer, divisionCode);
+        
+        // Debug: Log parsing results
+        console.log("Parse result:", {
+          totalRows: result.rows.length,
+          categories: result.categories,
+          errors: result.errors,
+          sampleRows: result.rows.slice(0, 5).map(r => ({
+            name: r.name,
+            barcode: r.barcode,
+            price: r.sellingPrice,
+            isCategory: r.isCategory
+          }))
+        });
 
         if (result.errors.length > 0) {
           setError(result.errors.join(". "));
