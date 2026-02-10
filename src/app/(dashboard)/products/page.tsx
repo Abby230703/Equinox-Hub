@@ -282,7 +282,7 @@ export default function ProductsPage() {
                             </Badge>
                           </td>
                           <td className="p-3 font-medium text-foreground">
-                            {formatCurrency(product.selling_price)}
+                            {formatCurrency(Number(product.selling_price) || 0)}
                           </td>
                           <td className="p-3 text-sm text-muted-foreground">
                             {product.hsn_code || "-"} / {product.gst_percent || 18}%
