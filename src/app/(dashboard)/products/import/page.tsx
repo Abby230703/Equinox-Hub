@@ -311,7 +311,6 @@ export default function ImportWizardPage() {
           box_quantity: row.parsed_box_qty,
           selling_price: row.parsed_selling_price || 0,
           list_price: row.parsed_selling_price,
-          cost_price: null,
           hsn_code: category?.hsn_code || row.assigned_hsn,
           gst_percent: category?.gst_percent || row.assigned_gst_percent || 18,
           stock_type: row.parsed_stock_type || "stocked",
@@ -335,7 +334,7 @@ export default function ImportWizardPage() {
           .insert(batch);
 
         if (insertError) {
-          console.error("Insert error:", insertError);
+          console.error("Insert error:", insertError.message || insertError);
           // Continue with other batches even if one fails
         }
       }
