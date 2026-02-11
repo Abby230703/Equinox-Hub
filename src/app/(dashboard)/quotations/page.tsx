@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useDivision } from "@/hooks/use-division";
 import { Header, PageHeader } from "@/components/layout/header";
-import { Card, CardContent, Button, Badge } from "@/components/ui";
+import { Card, CardContent, Button } from "@/components/ui";
 import { createClient } from "@/lib/supabase/client";
 import { formatCurrency, formatDate, cn } from "@/lib/utils";
 import {

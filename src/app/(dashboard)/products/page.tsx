@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useDivision } from "@/hooks/use-division";
@@ -22,6 +22,18 @@ import type { Product, Category } from "@/types/database";
 const PAGE_SIZE = 25;
 
 export default function ProductsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="inline-block w-8 h-8 border-4 border-muted border-t-foreground rounded-full animate-spin" />
+      </div>
+    }>
+      <ProductsPageContent />
+    </Suspense>
+  );
+}
+
+function ProductsPageContent() {
   const { divisionCode } = useDivision();
   const searchParams = useSearchParams();
   const supabase = createClient();

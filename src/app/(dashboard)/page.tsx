@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { useDivision } from "@/hooks/use-division";
-import { Header, PageHeader } from "@/components/layout/header";
-import { Card, CardContent, CardHeader, CardTitle, Badge } from "@/components/ui";
+import { Header } from "@/components/layout/header";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
 import { createClient } from "@/lib/supabase/client";
 import { formatCurrency, cn } from "@/lib/utils";
 import {
@@ -11,10 +11,6 @@ import {
   Package,
   Users,
   TrendingUp,
-  Clock,
-  AlertTriangle,
-  ArrowUpRight,
-  ArrowDownRight,
 } from "lucide-react";
 
 export default function DashboardPage() {

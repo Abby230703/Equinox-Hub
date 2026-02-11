@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-import { useDivision } from "@/hooks/use-division";
-import { cn } from "@/lib/utils";
 import { Bell, Search, User, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";

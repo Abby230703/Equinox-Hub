@@ -3,15 +3,13 @@
 import React from "react";
 import { useDivision } from "@/hooks/use-division";
 import { Header, PageHeader } from "@/components/layout/header";
-import { Card, CardContent, CardHeader, CardTitle, Button, Badge } from "@/components/ui";
+import { Card, CardContent, CardHeader, CardTitle, Badge } from "@/components/ui";
 import { cn } from "@/lib/utils";
 import {
   Building2,
   Phone,
-  MapPin,
   CreditCard,
   FileText,
-  Save,
 } from "lucide-react";
 
 export default function SettingsPage() {

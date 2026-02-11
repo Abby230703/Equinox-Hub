@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useDivision } from "@/hooks/use-division";
 import { Header, PageHeader } from "@/components/layout/header";
-import { Card, CardContent, Badge, Button } from "@/components/ui";
+import { Card, CardContent, Button } from "@/components/ui";
 import { createClient } from "@/lib/supabase/client";
 import { formatDate, cn } from "@/lib/utils";
 import {
