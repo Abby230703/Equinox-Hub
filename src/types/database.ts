@@ -1,4 +1,8 @@
-// Database entity types
+// ============================================
+// Database entity types — matches CLAUDE.md schema
+// ============================================
+
+// --- Core Entities ---
 
 export interface Division {
   id: string;
@@ -12,6 +16,11 @@ export interface Division {
   pincode: string | null;
   phone: string | null;
   gst_number: string;
+  bank_name: string | null;
+  bank_branch: string | null;
+  bank_account_number: string | null;
+  bank_ifsc: string | null;
+  upi_number: string | null;
   quotation_validity_days: number;
   quotation_prefix: string;
   terms_and_conditions: string | null;
@@ -23,9 +32,10 @@ export interface Category {
   id: string;
   division_id: string;
   name: string;
+  hsn_code: string | null;
+  gst_percent: number | null;
   sort_order: number;
-  hsn_code?: string;
-  gst_percent?: number;
+  is_active: boolean;
   created_at: string;
 }
 
@@ -73,11 +83,14 @@ export interface Product {
   marketplace_listed: boolean;
   is_active: boolean;
   is_auto_sku: boolean;
+  import_batch_id: string | null;
   import_notes: string | null;
   source_row_number: number | null;
   created_at: string;
   updated_at: string;
 }
+
+// --- Import System ---
 
 export interface ImportBatch {
   id: string;
@@ -91,6 +104,7 @@ export interface ImportBatch {
   status: "parsing" | "validating" | "reviewing" | "committed" | "rolled_back";
   committed_at: string | null;
   committed_by: string | null;
+  created_at: string;
 }
 
 export interface ImportStagingRow {
@@ -99,26 +113,27 @@ export interface ImportStagingRow {
   division_id: string;
   row_number: number;
   raw_data: Record<string, unknown>;
-  parsed_sku: string | null;
+  parsed_sku: string;
   parsed_barcode: string | null;
-  parsed_name: string | null;
-  parsed_category_name: string | null;
+  parsed_name: string;
+  parsed_category_name: string;
   parsed_specifications: string | null;
-  parsed_customizable: boolean | null;
+  parsed_unit: string;
+  parsed_selling_price: number;
+  parsed_list_price: number | null;
+  parsed_product_class: "standard" | "custom_print" | "made_to_order";
+  parsed_customizable: boolean;
   parsed_print_type: string | null;
   parsed_moq: number | null;
   parsed_sleeve_qty: number | null;
   parsed_box_qty: number | null;
-  parsed_stock_type: string | null;
-  parsed_selling_price: number | null;
+  parsed_stock_type: "stocked" | "made_to_order";
   parsed_warehouse_zone: string | null;
-  parsed_unit: string | null;
-  detected_product_class: "standard" | "custom_print" | "made_to_order" | null;
-  detected_parent_barcode: string | null;
+  parsed_remarks: string | null;
   validation_status: "valid" | "warning" | "error";
   validation_messages: ValidationMessage[];
-  conflict_type: "duplicate_barcode" | "existing_product" | "custom_print_variant" | null;
-  resolution: "auto_sku" | "skip" | "overwrite" | "create_variant" | null;
+  conflict_type: string | null;
+  resolution: string | null;
   assigned_category_id: string | null;
   assigned_hsn: string | null;
   assigned_gst_percent: number | null;
@@ -130,9 +145,20 @@ export interface ImportStagingRow {
 
 export interface ValidationMessage {
   type: "error" | "warning" | "info";
+  field: string;
   message: string;
-  field?: string;
 }
+
+export interface CategoryAssignment {
+  category_name: string;
+  product_count: number;
+  existing_category_id: string | null;
+  hsn_code: string;
+  gst_percent: number | null;
+  is_new: boolean;
+}
+
+// --- Quotations ---
 
 export interface Quotation {
   id: string;
@@ -140,6 +166,9 @@ export interface Quotation {
   division_id: string;
   customer_id: string;
   customer_name: string | null;
+  customer_address: string | null;
+  customer_phone: string | null;
+  customer_gst: string | null;
   subtotal: number;
   discount_percent: number;
   discount_amount: number;
@@ -170,62 +199,44 @@ export interface QuotationItem {
   sort_order: number;
 }
 
-// Dashboard stats
-export interface DashboardStats {
-  totalQuotationsThisWeek: number;
-  pendingFollowUp: number;
-  expiringIn2Days: number;
-  totalValueThisMonth: number;
-  conversionRate: number;
-}
-
-// Import wizard state
-export interface ImportWizardState {
-  currentStage: 1 | 2 | 3 | 4;
-  batchId: string | null;
-  fileName: string | null;
-  divisionId: string;
-  divisionCode: "APT" | "HOSPI";
-  stagingRows: ImportStagingRow[];
-  categories: DetectedCategory[];
-  summary: ImportSummary | null;
-}
-
-export interface DetectedCategory {
-  name: string;
-  count: number;
-  hsn_code: string | null;
-  gst_percent: number | null;
-  assigned_category_id: string | null;
-}
+// --- Import Wizard State ---
 
 export interface ImportSummary {
   total_rows: number;
   valid_count: number;
   warning_count: number;
   error_count: number;
-  custom_print_variants: number;
-  auto_generated_skus: number;
   categories_detected: number;
+  auto_generated_skus: number;
 }
 
-// Parsed Excel row structure
-export interface ParsedExcelRow {
+/** Row parsed from the Excel template before validation */
+export interface ParsedRow {
   rowNumber: number;
-  raw: Record<string, unknown>;
+  rawData: Record<string, unknown>;
+  sku: string;
   barcode: string | null;
-  name: string | null;
-  categoryName: string | null;
+  name: string;
+  categoryName: string;
   specifications: string | null;
+  unit: string;
+  sellingPrice: number;
+  listPrice: number | null;
+  productClass: string;
   customizable: boolean;
   printType: string | null;
   moq: number | null;
   sleeveQty: number | null;
   boxQty: number | null;
-  stockType: "stocked" | "made_to_order";
-  sellingPrice: number | null;
-  listPrice: number | null;
+  stockType: string;
   warehouseZone: string | null;
-  unit: string;
-  isCategory: boolean;
+  remarks: string | null;
+}
+
+/** Row after validation with status and messages */
+export interface ValidatedRow extends ParsedRow {
+  validationStatus: "valid" | "warning" | "error";
+  validationMessages: ValidationMessage[];
+  conflictType: string | null;
+  isAutoSku: boolean;
 }
